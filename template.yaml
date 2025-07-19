@@ -4,7 +4,8 @@ metadata:
   name: nginx-app-template
   annotations:
     description: "Template to deploy NGINX with external parameters (all required)"
-parameters:
+spec:
+  parameters:
     - name: APPLICATION_NAME
       displayName: Application Name
       description: The name for the NGINX application.
@@ -21,7 +22,7 @@ parameters:
       # Removed: value: ""
       required: false # Keep this as false if you want it truly optional
 
-objects:
+  objects:
     - apiVersion: apps/v1
       kind: Deployment
       metadata:
