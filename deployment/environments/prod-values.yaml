@@ -4,7 +4,7 @@
 
 # Deployment specific values
 DeploymantName: my-web-app-deployment
-replicaCount: 2 # Number of desired pods for the deployment
+replicaCount: 3 # Number of desired pods for the deployment
 
 # Container specific values
 ContainerName: my-web-app-container
