@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argo-test
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/tylerauerbeck/my-example-argo-deployment.git
+    targetRevision: master
+    path: nexus
+
+    # plugin specific config
+    plugin:
+      name: oc-template
+      # environment variables passed to the plugin
+      env:
+        - name: TEMPLATE_NAME
+          value: template.yaml
+
+        - name: PARAM_FILE
+          value: parameters.env
+
+  # Destination cluster and namespace to deploy the application
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cicd-dev-cluster
