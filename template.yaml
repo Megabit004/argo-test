@@ -1,0 +1,94 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: nginx-app-template
+  annotations:
+    description: "Template to deploy NGINX with external parameters (all required)"
+parameters:
+    - name: APPLICATION_NAME
+      displayName: Application Name
+      description: The name for the NGINX application.
+      # Removed: value: nginx-app
+      required: true
+    - name: IMAGE_TAG
+      displayName: NGINX Image Tag
+      description: The tag for the NGINX Docker image (e.g., 1.25.3).
+      # Removed: value: 1.25.3
+      required: true
+    - name: ROUTE_HOSTNAME
+      displayName: Route Hostname
+      description: Optional custom hostname for the NGINX route.
+      # Removed: value: ""
+      required: false # Keep this as false if you want it truly optional
+
+objects:
+    - apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        labels:
+          app: ${APPLICATION_NAME}
+        name: ${APPLICATION_NAME}
+      spec:
+        replicas: 1
+        selector:
+          matchLabels:
+            app: ${APPLICATION_NAME}
+        template:
+          metadata:
+            labels:
+              app: ${APPLICATION_NAME}
+          spec:
+            containers:
+              - name: httpd
+                image: "httpd:${IMAGE_TAG}"
+                ports:
+                  - containerPort: 80
+                    protocol: TCP
+                readinessProbe:
+                  httpGet:
+                    path: /
+                    port: 80
+                  initialDelaySeconds: 5
+                  periodSeconds: 10
+                livenessProbe:
+                  httpGet:
+                    path: /
+                    port: 80
+                  initialDelaySeconds: 15
+                  periodSeconds: 20
+        strategy:
+          type: Recreate
+
+    - apiVersion: v1
+      kind: Service
+      metadata:
+        labels:
+          app: ${APPLICATION_NAME}
+        name: ${APPLICATION_NAME}
+      spec:
+        ports:
+          - name: http
+            port: 80
+            protocol: TCP
+            targetPort: 80
+        selector:
+          app: ${APPLICATION_NAME}
+        type: ClusterIP
+
+    - apiVersion: route.openshift.io/v1
+      kind: Route
+      metadata:
+        labels:
+          app: ${APPLICATION_NAME}
+        name: ${APPLICATION_NAME}
+      spec:
+        host: "${ROUTE_HOSTNAME}"
+        to:
+          kind: Service
+          name: ${APPLICATION_NAME}
+          weight: 100
+        port:
+          targetPort: http
+        tls:
+          termination: edge
+          insecureEdgeTerminationPolicy: Redirect
