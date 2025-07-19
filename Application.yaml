@@ -2,13 +2,13 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: argo-test
-  namespace: argocd
+  namespace: openshift-gitops
 spec:
   project: default
   source:
-    repoURL: https://github.com/tylerauerbeck/my-example-argo-deployment.git
-    targetRevision: master
-    path: nexus
+    repoURL: https://github.com/Megabit004/argo-test.git
+    targetRevision: main
+    path: .
 
     # plugin specific config
     plugin:
@@ -19,7 +19,7 @@ spec:
           value: template.yaml
 
         - name: PARAM_FILE
-          value: parameters.env
+          value: dev/parameters.env
 
   # Destination cluster and namespace to deploy the application
   destination:
