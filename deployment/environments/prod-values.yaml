@@ -9,8 +9,8 @@ replicaCount: 2 # Number of desired pods for the deployment
 # Container specific values
 ContainerName: my-web-app-container
 image:
-  repository: nginx # Example: your-registry/your-image
-  tag: latest     # Example: 1.25.3 or a specific version
+  repository: mike004/nginx # Example: your-registry/your-image
+  tag: aro     # Example: 1.25.3 or a specific version
   pullPolicy: IfNotPresent # Options: Always, Never, IfNotPresent
 
 # Service specific values
