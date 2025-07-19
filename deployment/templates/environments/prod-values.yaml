@@ -1,0 +1,20 @@
+# Default values for my-web-app.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# Deployment specific values
+DeploymantName: my-web-app-deployment
+replicaCount: 2 # Number of desired pods for the deployment
+
+# Container specific values
+ContainerName: my-web-app-container
+image:
+  repository: nginx # Example: your-registry/your-image
+  tag: latest     # Example: 1.25.3 or a specific version
+  pullPolicy: IfNotPresent # Options: Always, Never, IfNotPresent
+
+# Service specific values
+ServiceName: my-web-app-service
+service:
+  type: nodePort # Options: ClusterIP, NodePort, LoadBalancer
+  port: 80        # The port the service will listen on and the container will expose
