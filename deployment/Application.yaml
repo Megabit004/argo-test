@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: my-helm-frontend
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Megabit004/argo-test.git
+    targetRevision: main # Or a specific chart version like '1.2.3'
+    path: deployment/.
+    helm:
+      valueFiles:
+        - environments/prod-values.yaml 
+  destination:
+    server: https://my-dev-cluster.example.com # Or the name of your registered cluster if you prefer
+    # If using a registered cluster name, it would look like:
+    # name: my-dev-cluster
+    namespace: dev
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
