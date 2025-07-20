@@ -28,7 +28,7 @@ spec:
         - name: {{ .Values.ContainerName }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullSecrets:
-            - name: docker-registry
+          - name: my-secret
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
